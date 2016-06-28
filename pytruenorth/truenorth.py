@@ -34,7 +34,7 @@ SPIKES_HEADER = \
     {"version":"sfto1.0", "defaultDestinationDelay" : 1}"""
 
 NUM_NEURONS = 256
-NUM_AXONS = 256  # TODO: use this constant below instead of the implicit NUM_AXONS == NUM_NEURONS
+NUM_AXONS = 256
 NUM_AXON_TYPES = 4
 
 RESET_MODE_NORMAL = 0

@@ -8,13 +8,21 @@ Development version:
 
     $ pip install git+https://github.com/vmonaco/pytruenorth
 
+Dependencies are: Python 3, numpy, and ujson. It is recommended to use [Anaconda](https://www.continuum.io/downloads) and create a virtual env with the above dependencies installed. For example, after Anaconda is installed:
+
+    $ conda create -n tn python=3 anaconda
+    
+Then,
+
+    $ source activate tn
+
+and install the package using the command above.
+
 ## Example
 
 Create and configure TrueNorth chip with tonic spiking neurons across two cores.
 
 ```python
-
-
 from pytruenorth import TrueNorthChip, NEURON_DEST_OUT
 
 chip = TrueNorthChip(num_cores=2)
@@ -50,7 +58,6 @@ chip.cores[1].dest_axon[7] = 123
 
 # Send spikes to axon 3 on core 1. Spikes are (time, core, axon) tuples
 spikes_in = np.concatenate([[(t, 1, 3), (t, 1, 4)] for t in range(100)])
-
 ```
 
 Optionally define a step function to process spikes on each time step. The step function should return False if execution should halt (before the number of time steps is reached) and True otherwise.
@@ -98,8 +105,6 @@ spikes_out_tn1 = chip.run_tn(T=100, tnhost='tnfob', spikes_in=spikes_in)
 # Use the step function to terminate
 spikes_out_tn2 = chip.run_tn(T=10000, tnhost='tnfob', spikes_in=spikes_in,
                              step_fn=step_fn_closure())
-
-
 ```
 
 Summarize the output spikes. We expect:
@@ -110,7 +115,6 @@ Summarize the output spikes. We expect:
 * Neuron (1,7): period 5, phase 1 with spikes on axon 7 every tick
 
 ```python
-
 def spike_summary(name, spikes):
     print('%s spike count: %d' % (name, len(spikes)))
     for dest_axon in [0, 1, 2, 123]:
