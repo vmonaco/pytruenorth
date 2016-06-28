@@ -51,9 +51,13 @@ chip.cores[1].dest_axon[7] = 123
 # Send spikes to axon 3 on core 1. Spikes are (time, core, axon) tuples
 spikes_in = np.concatenate([[(t, 1, 3), (t, 1, 4)] for t in range(100)])
 
-# The step function optionally processes spikes on each time step. It should return False if execution should halt (before the number of time steps is reached) and True otherwise.
+```
 
-# Step function generator that simulates a long-running function and halts execution when a threshold is reached
+Optionally define a step function to process spikes on each time step. The step function should return False if execution should halt (before the number of time steps is reached) and True otherwise.
+
+```python
+# Step function generator that simulates a long-running function and 
+# halts execution when a threshold is reached
 def step_fn_closure(num_spikes=55, time_sleep=0.1):
     counter = 0
 
