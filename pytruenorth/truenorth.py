@@ -241,7 +241,7 @@ class TrueNorthCore(object):
 
         return core, neuron_dict
 
-
+# TODO: spike streaming. This function basically works, but synchronization with the chip needs to be addressed.
 # def encode_tnsf_buffer(t, spikes, T, buffer_id_obj):
 #     """
 #     t is the current time
