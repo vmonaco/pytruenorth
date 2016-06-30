@@ -100,12 +100,14 @@ The same chip configuration can be deployed to an NS1e. Make sure the tnuser ide
 
 ```python
 # Run on TrueNorth for a fixed number of time steps
-spikes_out_tn1 = chip.run_tn(T=100, tnhost='tnfob', spikes_in=spikes_in)
+spikes_out_tn1 = chip.run_tn(T=100, tnhost='truenorth', spikes_in=spikes_in)
 
 # Use the step function to terminate
-spikes_out_tn2 = chip.run_tn(T=10000, tnhost='tnfob', spikes_in=spikes_in,
+spikes_out_tn2 = chip.run_tn(T=10000, tnhost='truenorth', spikes_in=spikes_in,
                              step_fn=step_fn_closure())
 ```
+
+If the NS1e deployment doesn't work, you may have to specify the spike destination host and port (from the perspective of the NS1e) through the udp_spike_destination_host and udp_spike_destination_port parameters.
 
 Summarize the output spikes. We expect:
 
