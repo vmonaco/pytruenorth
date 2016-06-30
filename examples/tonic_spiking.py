@@ -30,7 +30,7 @@ def extract_period_phase(spikes, dest_core, dest_axon):
     return period, phase
 
 
-def run():
+def run(tnhost, udp_spike_destination_host, udp_spike_destination_port):
     """Tonic spiking neurons across two cores.
     Neuron (0,0): period 10, phase 0
     Neuron (0,1): period 10, phase 9
@@ -99,10 +99,15 @@ def run():
     spikes_out_nscs2 = chip.run_nscs(T=10000, step_fn=step_fn_closure(), spikes_in=spikes_in)
 
     # Run on TrueNorth for a fixed number of time steps
-    spikes_out_tn1 = chip.run_tn(T=100, tnhost='tnfob', spikes_in=spikes_in)
+    spikes_out_tn1 = chip.run_tn(T=100, tnhost=tnhost,
+                                 udp_spike_destination_host=udp_spike_destination_host,
+                                 udp_spike_destination_port=udp_spike_destination_port,
+                                 spikes_in=spikes_in)
 
     # Use the step function to terminate
-    spikes_out_tn2 = chip.run_tn(T=10000, tnhost='tnfob', spikes_in=spikes_in,
+    spikes_out_tn2 = chip.run_tn(T=10000, tnhost=tnhost, spikes_in=spikes_in,
+                                 udp_spike_destination_host=udp_spike_destination_host,
+                                 udp_spike_destination_port=udp_spike_destination_port,
                                  step_fn=step_fn_closure())
 
     def spike_summary(name, spikes):
@@ -121,4 +126,8 @@ def run():
 
 if __name__ == '__main__':
     np.set_printoptions(precision=4, suppress=True)
-    run()
+    if len(sys.argv) < 4:
+        print('Usage: $ python tonic_spiking.py [tnhost] [spike_dest_host] [spike_dest_port]')
+
+    tnhost, udp_spike_destination_host, udp_spike_destination_port = sys.argv[1:4]
+    run(tnhost, udp_spike_destination_host, udp_spike_destination_port)
