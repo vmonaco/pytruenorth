@@ -130,4 +130,4 @@ if __name__ == '__main__':
         print('Usage: $ python tonic_spiking.py [tnhost] [spike_dest_host] [spike_dest_port]')
 
     tnhost, udp_spike_destination_host, udp_spike_destination_port = sys.argv[1:4]
-    run(tnhost, udp_spike_destination_host, udp_spike_destination_port)
+    run(tnhost, udp_spike_destination_host, int(udp_spike_destination_port))
