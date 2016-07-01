@@ -96,7 +96,7 @@ spikes_out_nscs1 = chip.run_nscs(T=100, spikes_in=spikes_in)
 spikes_out_nscs2 = chip.run_nscs(T=10000, step_fn=step_fn_closure(), spikes_in=spikes_in)
 ```
 
-The same chip configuration can be deployed to an NS1e. Make sure the tnuser identity file is installed.
+The same chip configuration can be deployed to an NS1e.
 
 ```python
 # Run on TrueNorth for a fixed number of time steps
@@ -107,7 +107,7 @@ spikes_out_tn2 = chip.run_tn(T=10000, tnhost='truenorth', spikes_in=spikes_in,
                              step_fn=step_fn_closure())
 ```
 
-If the NS1e deployment doesn't work, you may have to specify the spike destination host and port (from the perspective of the NS1e) through the udp_spike_destination_host and udp_spike_destination_port parameters.
+If the NS1e deployment doesn't work, you may have to specify the spike destination host and port (from the perspective of the NS1e) through the udp_spike_destination_host and udp_spike_destination_port parameters. Also be sure that the NS1e can be accessed via an ssh public key: make sure the tnuser identity file is visible to ssh.
 
 Summarize the output spikes. We expect:
 
