@@ -107,7 +107,7 @@ spikes_out_tn2 = chip.run_tn(T=10000, tnhost='truenorth', spikes_in=spikes_in,
                              step_fn=step_fn_closure())
 ```
 
-If the NS1e deployment doesn't work, you may have to specify the spike destination host and port (from the perspective of the NS1e) through the udp_spike_destination_host and udp_spike_destination_port parameters. Also be sure that the NS1e can be accessed via an ssh public key: make sure the tnuser identity file is visible to ssh.
+If the NS1e deployment doesn't work, you may have to specify the spike destination host and port (from the perspective of the NS1e) through the udp_spike_destination_host and udp_spike_destination_port parameters. Also be sure that the NS1e can be accessed via an ssh public key: the tnuser identity file must visible to ssh.
 
 Summarize the output spikes. We expect:
 
