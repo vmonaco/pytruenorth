@@ -101,6 +101,12 @@ DEFAULT_CONFIG = {
     # 'tcpSpikeDestinationHost': 'loopback',
 }
 
+# Add default nscs install locations to PATH
+os.environ['PATH'] = ':'.join([
+    os.environ['HOME'] + '/truenorth/usr/local/bin/',
+    '/usr/local/nscs/bin/',
+    os.getenv('PATH', '')
+])
 
 def enqueue_output(out, queue):
     for line in iter(out.readline, b''):
