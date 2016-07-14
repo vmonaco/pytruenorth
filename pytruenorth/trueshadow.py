@@ -233,10 +233,17 @@ class TrueShadow(object):
         raise NotImplementedError()
 
 
-class MNIST_5core(TrueShadow):
-    def __init__(self, decoder):
+class FrameClassifier5Core(TrueShadow):
+    def __init__(self, input_dim=10, output_dim=256):
+        self.output_dim = output_dim
+
         # The decoding matrix translates the output layer probabilities (or spikes in the deployment network)
         # to class label probabilities for either the loss function or labeling an unknown sample
+        neurons_per_class = output_dim // input_dim
+        idx = np.tile(np.arange(input_dim), neurons_per_class)
+        decoder = np.zeros((input_dim, output_dim))
+        decoder[idx, np.arange(len(idx))] = 1
+        decoder = tf.constant(decoder, dtype=tf.float32)
         self.decoder = decoder
 
         input_dim, output_dim = map(int, decoder.get_shape())
@@ -303,7 +310,7 @@ class MNIST_5core(TrueShadow):
         self.decoder = decoder
         self.optimizer = optimizer
 
-        super(MNIST_5core, self).__init__()
+        super(FrameClassifier5Core, self).__init__()
 
     def encode(self, data):
         """Encode a list of data samples into (time, neuron, axon) spike inputs"""
@@ -380,16 +387,3 @@ class MNIST_5core(TrueShadow):
             shutil.rmtree(deploy_dir)
 
         return acc
-
-
-class MNIST_LocalDecoder(MNIST_5core):
-    """5 core network with a local population decoder"""
-
-    def __init__(self, input_dim=10, output_dim=256):
-        self.output_dim = output_dim
-        neurons_per_class = output_dim // input_dim
-        idx = np.tile(np.arange(input_dim), neurons_per_class)
-        decoder = np.zeros((input_dim, output_dim))
-        decoder[idx, np.arange(len(idx))] = 1
-        decoder = tf.constant(decoder, dtype=tf.float32)
-        super(MNIST_LocalDecoder, self).__init__(decoder)

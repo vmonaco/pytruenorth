@@ -22,7 +22,37 @@ and install the package using the command above.
 
 ## Example: spiking neural network classifier
 
-Comming soon...
+Train a probabilistic network on the MNIST dataset and deploy to TrueNorth (either NSCS or an NS1e).
+
+```python
+# pytruenorth contains a function to load the MNIST dataset
+mnist = load_mnist()
+
+# The FrameClassifier5Core class implements a 5 core network
+model = FrameClassifier5Core()
+
+# Make a dir for the TF and TN models
+basedir = os.path.join(MODELS_DIR, 'MNIST_5core')
+if not os.path.exists(basedir):
+    os.mkdir(basedir)
+
+# Directory where to store tensorflow checkpoint files
+tfdir = os.path.join(basedir, 'tf-model')
+
+# Directory where to store TrueNorth configuration files
+tndir = os.path.join(basedir, 'tn-model')
+
+# Train the model
+model.train(mnist.train, mnist.validation,
+            dirpath=tfdir, num_epochs=1000, checkpoint_steps=10,
+            batch_size=300, report_steps=10, deploy_steps=10)
+
+# High-precision probabilistic network performance
+model.test(mnist.test, batch_size=100)
+
+# Low-precision spiking network performance, deploys to NSCS by default
+model.deploy(mnist.test, dirpath=tndir)
+```
 
 ## Example: tonic spiking neurons
 

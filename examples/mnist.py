@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 from pytruenorth.data import load_mnist
-from pytruenorth.trueshadow import MNIST_LocalDecoder
+from pytruenorth.trueshadow import FrameClassifier5Core
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 MODELS_DIR = os.path.join(ROOT_DIR, 'models')
@@ -19,7 +19,7 @@ def mnist_results(num_tn_reps=5, seed=1234, restore=False):
     # Reset the graph before creating a model
     tf.reset_default_graph()
 
-    model = MNIST_LocalDecoder()
+    model = FrameClassifier5Core()
 
     # Make a dir for the TF and TN models
     basedir = os.path.join(MODELS_DIR, 'MNIST_5core')
