@@ -2,7 +2,7 @@
 
 ``pytruenorth`` is a python package to communicate with and deploy networks to [TrueNorth](http://science.sciencemag.org/content/345/6197/668). It was developed at the [2016 Telluride Neuromorphic Cognition Engineering Workshop](http://telluride.iniforum.ch/).
 
-``pytruenorth`` can be used to train a spiking neural network (SNN) or hand-code a population of leaky integrate-and-fire (LIF) neurons as described by the [TrueNorth neuron model](http://www.research.ibm.com/software/IBMResearch/multimedia/IJCNN2013.neuron-model.pdf). The resulting model can be deployed to either an NS1e (teh TrueNorth hardware) or NSCS (the TrueNorth simulator). Spike inputs/outputs can be streamed to/from the NS1e for real-time system deployment.
+``pytruenorth`` can be used to train a spiking neural network (SNN) or hand-code a population of leaky integrate-and-fire (LIF) neurons as described by the [TrueNorth neuron model](http://www.research.ibm.com/software/IBMResearch/multimedia/IJCNN2013.neuron-model.pdf). The resulting model can be deployed to either an NS1e (teh TrueNorth hardware) or NSCS (the TrueNorth simulator). Spike outputs can be streamed from the NS1e for real-time system deployment.
 
 ## Install
 
