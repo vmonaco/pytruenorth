@@ -1,24 +1,10 @@
-import os
 import sys
 import time
 import numpy as np
 
 from pytruenorth import TrueNorthChip, NEURON_DEST_OUT
 
-# Important: make sure openmpi libs are on your LD_LIBRARY_PATH. For example, check some standard locations.
-os.environ['LD_LIBRARY_PATH'] = ':'.join([
-    os.getenv('LD_LIBRARY_PATH', ''),
-    '/usr/lib64/compat-openmpi/lib/',
-    '/usr/lib/openmpi/lib/',
-    os.environ['HOME'] + '/lib/openmpi/',
-])
-
-# Also important: make sure nscs is on your PATH. This should work if nscs was installed normally.
-os.environ['PATH'] = ':'.join([
-    os.getenv('PATH', ''),
-    os.environ['HOME'] + '/truenorth/usr/local/bin/',
-    '/usr/local/nscs/bin/',
-])
+# Important: make sure openmpi libs are on your LD_LIBRARY_PATH and make sure nscs is on your PATH.
 
 
 def extract_period_phase(spikes, dest_core, dest_axon):
