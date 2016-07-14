@@ -32,7 +32,7 @@ mnist = load_mnist()
 model = FrameClassifier5Core()
 
 # Make a dir for the TF and TN models
-basedir = os.path.join(MODELS_DIR, 'MNIST_5core')
+basedir = 'MNIST_5core'
 if not os.path.exists(basedir):
     os.mkdir(basedir)
 
