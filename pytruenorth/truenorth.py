@@ -551,6 +551,9 @@ class TrueNorthChip(object):
             stdout=out, stderr=out
         )
 
+        print('Ready')
+        sys.stdout.flush()
+
         while True:
             if spike_queue.empty():
                 # Check the producer thread
