@@ -612,7 +612,6 @@ class TrueNorthChip(object):
                 'coreCount': self.num_cores,
                 'neuronClass': self.neuron_class,
                 'crossbarSize': self.num_neurons,
-
                 'crossbarclass': 'CrossbarBinary',
                 'networking': 'INTRA',
             },
