@@ -378,12 +378,32 @@ class FrameClassifier5Core(TrueShadow):
         spikes_in = self.encode(test_data.data)
 
         # Decode the output spikes and measure accuracy, run for T+2 ticks since there are 2 core layers
-        spikes_out = chip.run_nscs(T + 2, spikes_in, dirpath=deploy_dir)
+        spikes_out = chip.run_nscs(T + 2, spikes_in=spikes_in, dirpath=deploy_dir)
         predicted_labels = self.decode(T + 2, spikes_out)
 
         acc = (test_data.labels.argmax(axis=1) == predicted_labels[2:]).sum() / len(test_data)
 
         if dirpath is None:
-            shutil.rmtree(deploy_dir)
+            shutil.rmtree(deploy_dir, ignore_errors=True)
 
         return acc
+
+    def get_crossbar_weights(self):
+
+        b111, c111, G111, s111, sw111 = self.sess.run(self.core_params[(1, 1, 1)])
+        b112, c112, G112, s112, sw112 = self.sess.run(self.core_params[(1, 1, 2)])
+        b121, c121, G121, s121, sw121 = self.sess.run(self.core_params[(1, 2, 1)])
+        b122, c122, G122, s122, sw122 = self.sess.run(self.core_params[(1, 2, 2)])
+        b211, c211, G211, s211, sw211 = self.sess.run(self.core_params[(2, 1, 1)])
+
+        return sw111, sw112, sw121, sw122, sw211
+
+    def get_crossbar_probas(self):
+
+        b111, c111, G111, s111, sw111 = self.sess.run(self.core_params[(1, 1, 1)])
+        b112, c112, G112, s112, sw112 = self.sess.run(self.core_params[(1, 1, 2)])
+        b121, c121, G121, s121, sw121 = self.sess.run(self.core_params[(1, 2, 1)])
+        b122, c122, G122, s122, sw122 = self.sess.run(self.core_params[(1, 2, 2)])
+        b211, c211, G211, s211, sw211 = self.sess.run(self.core_params[(2, 1, 1)])
+
+        return c111, c112, c121, c122, c211

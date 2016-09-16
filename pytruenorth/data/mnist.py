@@ -62,8 +62,12 @@ def load(validation_size=1000):
     train_data = train_data[idx[validation_size:], :]
     train_labels = train_labels[idx[validation_size:], :]
 
-    dataset.train = DataSet(train_data, train_labels)
-    dataset.validation = DataSet(validation_data, validation_labels)
-    dataset.test = DataSet(test_data, test_labels)
+    # dataset.train = DataSet(train_data, train_labels)
+    # dataset.validation = DataSet(validation_data, validation_labels)
+    # dataset.test = DataSet(test_data, test_labels)
+
+    dataset.train = DataSet(train_data[:1000], train_labels[:1000])
+    dataset.validation = DataSet(validation_data[:100], validation_labels[:100])
+    dataset.test = DataSet(test_data[:100], test_labels[:100])
 
     return dataset

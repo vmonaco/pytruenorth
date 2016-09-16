@@ -9,7 +9,7 @@ ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
 MODELS_DIR = os.path.join(ROOT_DIR, 'models')
 
 
-def mnist_results(num_tn_reps=5, seed=1234, restore=False):
+def mnist_results(num_tn_reps=5, seed=1234, restore=True):
     """Train and deploy a network using pytruenorth"""
     np.random.seed(seed)
 
@@ -60,6 +60,9 @@ def mnist_results(num_tn_reps=5, seed=1234, restore=False):
     with open(os.path.join(basedir, 'deploy_acc.txt'), 'wt') as f:
         f.write(deploy_summary)
 
+    from IPython import embed
+    embed()
+    raise Exception()
     return
 
 
