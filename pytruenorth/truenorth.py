@@ -504,7 +504,7 @@ class TrueNorthChip(object):
         json.dump(config, open(config_fname, 'wt'), escape_forward_slashes=False, indent=4)
 
         # Touch the output file, read by the producer thread below
-        call_or('touch %s' % spikes_out_fname, error=True)
+        open(spikes_out_fname, 'a').close()
 
         # Output spikes are written to the file and enqueued by the producer
         spikes_out = []
@@ -584,7 +584,8 @@ class TrueNorthChip(object):
         nscs_proc.kill()
 
         if cleanup_after:
-            shutil.rmtree(deploy_dir, ignore_errors=True)
+            print(deploy_dir)
+            # shutil.rmtree(deploy_dir, ignore_errors=True)
 
         if return_spikes_out:
             return np.array([], dtype=np.int32) if len(spikes_out) == 0 else np.concatenate(spikes_out)
