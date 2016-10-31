@@ -584,8 +584,7 @@ class TrueNorthChip(object):
         nscs_proc.kill()
 
         if cleanup_after:
-            print(deploy_dir)
-            # shutil.rmtree(deploy_dir, ignore_errors=True)
+            shutil.rmtree(deploy_dir, ignore_errors=True)
 
         if return_spikes_out:
             return np.array([], dtype=np.int32) if len(spikes_out) == 0 else np.concatenate(spikes_out)
