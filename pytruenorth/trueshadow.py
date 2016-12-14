@@ -28,16 +28,16 @@ def normal_ccdf(x, mu, sigma2):
     # Check for degenerate distributions when sigma2 == 0
     # if x >= mu, n = 0
     # if x < mu, n = 1
-    sigma2_le_0 = tf.less_equal(sigma2, 0.)
-    x_gte_mu = tf.greater_equal(x, mu)
-    x_lt_mu = tf.less(x, mu)
+    # sigma2_le_0 = tf.less_equal(sigma2, 0.)
+    # x_gte_mu = tf.greater_equal(x, mu)
+    # x_lt_mu = tf.less(x, mu)
 
     # Never divide by zero, instead the logic below handles degenerate distribution cases
-    sigma2 = tf.select(sigma2_le_0, tf.ones_like(sigma2), sigma2)
+    # sigma2 = tf.cond(sigma2_le_0, lambda: tf.ones_like(sigma2), lambda: sigma2)
 
     p = (1. - 0.5 * (1. + tf.erf((x - mu) / tf.sqrt(2. * sigma2))))
-    p = tf.select(tf.logical_and(sigma2_le_0, x_gte_mu), tf.zeros_like(p), p)
-    p = tf.select(tf.logical_and(sigma2_le_0, x_lt_mu), tf.ones_like(p), p)
+    # p = tf.cond(tf.logical_and(sigma2_le_0, x_gte_mu), lambda: tf.zeros_like(p), lambda: p)
+    # p = tf.cond(tf.logical_and(sigma2_le_0, x_lt_mu), lambda: tf.ones_like(p), lambda: p)
     return p
 
 
@@ -167,7 +167,7 @@ class TrueShadow(object):
             model_fname = os.path.join(ckpt_dir, model_name)
 
         # Op to initialize all variables which should have been created in a subclass initialization
-        init_op = tf.initialize_all_variables()
+        init_op = tf.global_variables_initializer()
 
         # Create a saver
         saver = tf.train.Saver()
@@ -181,6 +181,7 @@ class TrueShadow(object):
         train_size = len(train_data)
         tf.train.start_queue_runners(sess=sess)
 
+        results = []
         for epoch_i in range(1, num_epochs + 1):
             for batch_i in range(train_size // batch_size):
                 batch_xs, batch_ys = train_data.next_batch(batch_size)
@@ -198,21 +199,33 @@ class TrueShadow(object):
                     sess.run(tf.assign(core_c, tf.clip_by_value(core_c, 0., 1.)))
 
             report = ''
+            report_values = [epoch_i]
 
             if report_steps > 0 and (epoch_i % report_steps == 0 or epoch_i == num_epochs):
-                report += '[ Shadow  ACC: %.4f ]' % self.test(validation_data)
+                train_acc = self.test(train_data)
+                test_acc = self.test(validation_data)
+                report += '[ Train  ACC: %.4f ][ Test  ACC: %.4f ]'
+                report_values.append(train_acc)
+                report_values.append(test_acc)
 
             if deploy_steps > 0 and (epoch_i % deploy_steps == 0 or epoch_i == num_epochs):
-                report += '[ Spiking ACC: %.4f ]' % self.deploy(validation_data)
+                train_spike_acc = self.deploy(validation_data)
+                test_spike_acc = self.deploy(validation_data)
+                report += '[ Train Spike ACC: %.4f ][ Test Spike ACC: %.4f ]'
+                report_values.append(train_spike_acc)
+                report_values.append(test_spike_acc)
 
             if len(report):
-                print('Epoch %4d,' % epoch_i, report)
+                report = 'Epoch %4d,' + report
+                print(report % tuple(report_values))
 
             # Save if we have a dirpath, reach a checkpoint state, or reached the end of training
             if dirpath and checkpoint_steps > 0 and (epoch_i % checkpoint_steps == 0 or epoch_i == num_epochs):
                 saver.save(sess, model_fname)
 
-        return
+            results.append(report_values)
+
+        return results
 
     def test(self, test_data, batch_size=100):
         """Test a model that was already trained or loaded"""
