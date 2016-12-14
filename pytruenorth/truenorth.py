@@ -551,8 +551,7 @@ class TrueNorthChip(object):
             stdout=out, stderr=out
         )
 
-        print('Ready')
-        sys.stdout.flush()
+        # print('Ready', flush=True)
 
         while True:
             if spike_queue.empty():

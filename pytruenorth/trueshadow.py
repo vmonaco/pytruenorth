@@ -202,8 +202,8 @@ class TrueShadow(object):
             report_values = [epoch_i]
 
             if report_steps > 0 and (epoch_i % report_steps == 0 or epoch_i == num_epochs):
-                train_acc = self.test(train_data)
-                test_acc = self.test(validation_data)
+                train_acc = self.test(train_data, batch_size=batch_size)
+                test_acc = self.test(validation_data, batch_size=batch_size)
                 report += '[ Train  ACC: %.4f ][ Test  ACC: %.4f ]'
                 report_values.append(train_acc)
                 report_values.append(test_acc)
