@@ -186,7 +186,7 @@ class TrueShadow(object):
             for batch_i in range(train_size // batch_size):
                 batch_xs, batch_ys = train_data.next_batch(batch_size)
 
-                if sample_weights is None:
+                if class_weight is None:
                     sample_weights = np.ones(len(batch_ys))
                 else:
                     sample_weights = (batch_ys * class_weight).sum(axis=1)
