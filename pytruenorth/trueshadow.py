@@ -217,7 +217,7 @@ class TrueShadow(object):
 
             if len(report):
                 report = 'Epoch %4d,' + report
-                print(report % tuple(report_values))
+                print(report % tuple(report_values), flush=True)
 
             # Save if we have a dirpath, reach a checkpoint state, or reached the end of training
             if dirpath and checkpoint_steps > 0 and (epoch_i % checkpoint_steps == 0 or epoch_i == num_epochs):
