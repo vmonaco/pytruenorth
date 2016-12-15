@@ -157,7 +157,7 @@ class TrueShadow(object):
         return
 
     def train(self, train_data, validation_data=None,
-              batch_size=100, num_epochs=10, sample_weights=None,
+              batch_size=100, num_epochs=10, class_weight=None,
               checkpoint_steps=1, report_steps=1, deploy_steps=0,
               dirpath=None, model_name=TF_MODEL_NAME, dropout=0.5):
         """Train the network and optionally save checkpoints"""
@@ -181,13 +181,15 @@ class TrueShadow(object):
         train_size = len(train_data)
         tf.train.start_queue_runners(sess=sess)
 
-        if sample_weights is None:
-            sample_weights = np.ones(len(train_data))
-
         results = []
         for epoch_i in range(1, num_epochs + 1):
             for batch_i in range(train_size // batch_size):
                 batch_xs, batch_ys = train_data.next_batch(batch_size)
+
+                if sample_weights is None:
+                    sample_weights = np.ones(len(batch_ys))
+                else:
+                    sample_weights = (batch_ys * class_weight).sum(axis=1)
 
                 sess.run(self.optimizer,
                          feed_dict={
