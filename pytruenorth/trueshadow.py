@@ -209,7 +209,7 @@ class TrueShadow(object):
                 report_values.append(test_acc)
 
             if deploy_steps > 0 and (epoch_i % deploy_steps == 0 or epoch_i == num_epochs):
-                train_spike_acc = self.deploy(validation_data)
+                train_spike_acc = self.deploy(train_data)
                 test_spike_acc = self.deploy(validation_data)
                 report += '[ Train Spike ACC: %.4f ][ Test Spike ACC: %.4f ]'
                 report_values.append(train_spike_acc)
