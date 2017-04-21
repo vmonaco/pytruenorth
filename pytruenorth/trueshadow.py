@@ -126,7 +126,8 @@ def configure_core(core, b, c, axon_types, axon_weights, dest_core, dest_axon):
     core.axon_type[:num_axons] = axon_types
 
     # Set the synaptic connections
-    core.w[:num_axons, :num_neurons] = c > np.random.uniform(0, 1, size=c.shape)
+    with np.errstate(invalid='ignore'):
+        core.w[:num_axons, :num_neurons] = c > np.random.uniform(0, 1, size=c.shape)
 
     core.dest_core[:num_neurons] = dest_core
     core.dest_axon[:num_neurons] = dest_axon
