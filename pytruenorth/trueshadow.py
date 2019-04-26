@@ -63,7 +63,7 @@ def synapse_weight(shape, core_name, weights=np.array([-2, -1, 1, 2])):
     axon_weight_perms = np.array(list(permutations(weights)), dtype=NP_DTYPE_INT)
 
     # And index into the array of permutations
-    axon_weight_idx = np.tile(np.arange(len(axon_weight_perms)), np.ceil(shape[1] / len(axon_weight_perms)))[:shape[1]]
+    axon_weight_idx = np.tile(np.arange(len(axon_weight_perms)), np.ceil(shape[1] / len(axon_weight_perms)).astype(NP_DTYPE_INT))[:shape[1]]
     axon_weight_idx = np.random.permutation(axon_weight_idx)
 
     axon_weights = axon_weight_perms[axon_weight_idx]
@@ -126,7 +126,8 @@ def configure_core(core, b, c, axon_types, axon_weights, dest_core, dest_axon):
     core.axon_type[:num_axons] = axon_types
 
     # Set the synaptic connections
-    core.w[:num_axons, :num_neurons] = c > np.random.uniform(0, 1, size=c.shape)
+    with np.errstate(invalid='ignore'):
+        core.w[:num_axons, :num_neurons] = c > np.random.uniform(0, 1, size=c.shape)
 
     core.dest_core[:num_neurons] = dest_core
     core.dest_axon[:num_neurons] = dest_axon
@@ -190,12 +191,13 @@ class TrueShadow(object):
                     sample_weights = np.ones(len(batch_ys))
                 else:
                     sample_weights = (batch_ys * class_weight).sum(axis=1)
+		
+                self.sample_weights = sample_weights
 
                 sess.run(self.optimizer,
                          feed_dict={
                              self.x: batch_xs,
                              self.y: batch_ys,
-                             self.sample_weights: sample_weights,
                              self.keep_prob: dropout,
                          })
 
@@ -280,7 +282,7 @@ class FrameClassifier5Core(TrueShadow):
         core122, core122_b, core122_c, core122_axon_types, core122_axon_weights, core122_s = connect_cores(
             tf.reshape(x2d[:, 12:28, 12:28], (-1, 256)), 64, '122')
 
-        core211_input = tf.concat(1, [core111, core112, core121, core122])
+        core211_input = tf.concat([core111, core112, core121, core122],1)
         output, core211_b, core211_c, core211_axon_types, core211_axon_weights, core211_s = connect_cores(core211_input,
                                                                                                           output_dim,
                                                                                                           '211')
@@ -312,7 +314,7 @@ class FrameClassifier5Core(TrueShadow):
         y_proba = normal_ccdf(x05, output_mu, output_sigma2)
 
         # TODO: watch out for log zeros in the loss function
-        loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_proba, y))
+        loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_proba, labels=y))
         # loss = - tf.reduce_mean(y * tf.log(y_proba) + (1. - y) * tf.log(1 - y_proba))
 
         # Correct prediction when the class has the highest average spike proba

@@ -476,6 +476,7 @@ class TrueNorthChip(object):
         """
         # Dir and filenames
         deploy_dir = maybe_mkdir(dirpath)
+        deploy_dir = os.path.join(os.getcwd(), deploy_dir)
         config_fname = os.path.join(deploy_dir, TN_CONFIG_NAME)
         model_json_fname = os.path.join(deploy_dir, TN_MODEL_JSON_NAME)
         spikes_in_fname = os.path.join(deploy_dir, SPIKES_IN_NAME)
